@@ -1,403 +1,215 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Nanna ❤️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>For Vishnu ❤️</title>
 
     <style>
-        body {
+        * {
             margin: 0;
-            background: black;
-            overflow: hidden;
-            font-family: "Segoe Script", "Comic Sans MS", cursive;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        #container {
-            width: 100vw;
+        body {
+            background: #000;
+            overflow: hidden;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: Arial, sans-serif;
         }
 
         canvas {
-            background: black;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            color: white;
+            z-index: 10;
+
+            font-size: 24px;
+            line-height: 1.6;
+
+            opacity: 0;
+            animation: showMessage 3s ease-in-out forwards;
+            animation-delay: 2s;
+
+            text-shadow: 0 0 10px #fff,
+                         0 0 20px #ff69b4,
+                         0 0 30px #ff1493;
+        }
+
+        .name {
+            font-size: 38px;
+            font-weight: bold;
+            color: #ff69b4;
+            display: block;
+            margin-bottom: 15px;
+
+            animation: heartbeat 1.5s infinite;
+        }
+
+        .success {
+            display: block;
+            margin-top: 15px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        @keyframes showMessage {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .message {
+                font-size: 18px;
+            }
+
+            .name {
+                font-size: 30px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div id="container">
-    <canvas id="heart" width="1000" height="800"></canvas>
-</div>
+    <canvas id="heartCanvas"></canvas>
 
-<script>
+    <div class="message">
 
-const canvas = document.getElementById("heart");
-const ctx = canvas.getContext("2d");
+        <span class="name">
+            Vishnu ❤️
+        </span>
 
-const colors = [
-    "#ff1493",
-    "#ff4d6d",
-    "#ff69b4",
-    "#ff0000",
-    "#ff8c00",
-    "#ffff00",
-    "#00ff7f",
-    "#00ffff",
-    "#00bfff",
-    "#7c4dff",
-    "#d946ef"
-];
+        To my best friend,<br>
 
-const centerX = 500;
-const centerY = 390;
+        Thank you for being my bestest friend forever. ❤️<br>
 
-let drawingAngle = 0;
-let heartFinished = false;
+        I love you Vishnu! 🫶🏻
 
-let textProgress = 0;
-let finalAnimation = false;
+        <span class="success">
+            Let's work together and get success! ✨
+        </span>
 
-let pulse = 0;
-let sparkle = 0;
+    </div>
 
+    <script>
 
-// --------------------------------------------------
-// HEART FORMULA
-// --------------------------------------------------
+        const canvas = document.getElementById("heartCanvas");
+        const ctx = canvas.getContext("2d");
 
-function getHeartPoint(t) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-    let x = 16 * Math.pow(Math.sin(t), 3);
+        let particles = [];
 
-    let y =
-        -(13 * Math.cos(t)
-        - 5 * Math.cos(2 * t)
-        - 2 * Math.cos(3 * t)
-        - Math.cos(4 * t));
+        // Create heart points
+        function heart(t) {
 
-    return {
-        x: x * 19,
-        y: y * 19
-    };
-}
+            const x = 16 * Math.pow(Math.sin(t), 3);
 
+            const y = -(13 * Math.cos(t)
+                - 5 * Math.cos(2 * t)
+                - 2 * Math.cos(3 * t)
+                - Math.cos(4 * t));
 
-// --------------------------------------------------
-// MESSAGE
-// --------------------------------------------------
-
-const messages = [
-    "Nanna ❤️",
-    "you are one who always special to me",
-    "I always stay your side",
-    "I will always love youuu",
-    "I promise youuuu",
-    "I never leave youuu",
-    "I LOVE YOU KANNAYA ❤️"
-];
-
-
-// --------------------------------------------------
-// DRAW HEART
-// --------------------------------------------------
-
-function drawHeart() {
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // ----------------------------------------------
-    // HEART LINES
-    // ----------------------------------------------
-
-    for (let i = 0; i < drawingAngle; i += 2) {
-
-        let t = i * Math.PI / 180;
-
-        let point = getHeartPoint(t);
-
-        let color =
-            colors[Math.floor(Math.random() * colors.length)];
-
-        ctx.beginPath();
-
-        ctx.moveTo(centerX, centerY);
-
-        ctx.lineTo(
-            centerX + point.x,
-            centerY + point.y
-        );
-
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2;
-
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = color;
-
-        ctx.stroke();
-
-        // Small dots on heart border
-
-        ctx.beginPath();
-
-        ctx.arc(
-            centerX + point.x,
-            centerY + point.y,
-            4,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle = color;
-
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = color;
-
-        ctx.fill();
-    }
-
-
-    ctx.shadowBlur = 0;
-
-
-    // ----------------------------------------------
-    // HEART DRAWING ANIMATION
-    // ----------------------------------------------
-
-    if (!heartFinished) {
-
-        drawingAngle += 3;
-
-        if (drawingAngle >= 360) {
-
-            drawingAngle = 360;
-
-            heartFinished = true;
-
-            // Start text animation
-            setTimeout(() => {
-                startTextAnimation();
-            }, 500);
-        }
-    }
-
-
-    // ----------------------------------------------
-    // TEXT
-    // ----------------------------------------------
-
-    if (heartFinished) {
-
-        drawText();
-    }
-
-
-    // ----------------------------------------------
-    // FINAL GLOWING ANIMATION
-    // ----------------------------------------------
-
-    if (finalAnimation) {
-
-        drawSparkles();
-
-        pulse += 0.05;
-
-        let glow =
-            15 + Math.sin(pulse) * 8;
-
-        ctx.save();
-
-        ctx.globalAlpha =
-            0.25 + Math.sin(pulse) * 0.08;
-
-        ctx.strokeStyle = "#ff1493";
-
-        ctx.lineWidth = 3;
-
-        ctx.shadowBlur = glow;
-
-        ctx.shadowColor = "#ff1493";
-
-        drawHeartOutline();
-
-        ctx.restore();
-    }
-
-
-    requestAnimationFrame(drawHeart);
-}
-
-
-// --------------------------------------------------
-// TEXT ANIMATION
-// --------------------------------------------------
-
-function startTextAnimation() {
-
-    let currentLine = 0;
-
-    const textTimer = setInterval(() => {
-
-        currentLine++;
-
-        textProgress = currentLine;
-
-        if (currentLine >= messages.length) {
-
-            clearInterval(textTimer);
-
-            setTimeout(() => {
-
-                finalAnimation = true;
-
-            }, 1000);
+            return {
+                x: x * 20,
+                y: y * 20
+            };
         }
 
-    }, 700);
-}
+        // Create colorful particles
+        for (let i = 0; i < 500; i++) {
 
+            let t = Math.random() * Math.PI * 2;
 
-// --------------------------------------------------
-// DRAW MESSAGE
-// --------------------------------------------------
+            let p = heart(t);
 
-function drawText() {
+            particles.push({
 
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+                x: canvas.width / 2,
+                y: canvas.height / 2,
 
-    for (let i = 0; i < textProgress; i++) {
+                targetX: canvas.width / 2 + p.x,
+                targetY: canvas.height / 2 + p.y,
 
-        let y;
+                color: `hsl(${Math.random() * 360}, 100%, 65%)`,
 
-        if (messages.length === 7) {
+                size: Math.random() * 3 + 1,
 
-            y = 230 + i * 48;
+                speed: Math.random() * 0.03 + 0.01
+            });
         }
 
-        let fontSize;
+        function animate() {
 
-        if (i === 0) {
-            fontSize = 42;
+            ctx.fillStyle = "rgba(0, 0, 0, 0.18)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+
+                p.x += (p.targetX - p.x) * p.speed;
+                p.y += (p.targetY - p.y) * p.speed;
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    p.x,
+                    p.y,
+                    p.size,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fillStyle = p.color;
+                ctx.fill();
+
+            });
+
+            requestAnimationFrame(animate);
         }
-        else if (i === 6) {
-            fontSize = 32;
-        }
-        else {
-            fontSize = 23;
-        }
 
-        ctx.font =
-            `bold ${fontSize}px "Segoe Script", "Comic Sans MS", cursive`;
+        animate();
 
-        let color =
-            colors[i % colors.length];
+        // Resize
+        window.addEventListener("resize", () => {
 
-        ctx.fillStyle = color;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-        ctx.shadowBlur = 15;
+        });
 
-        ctx.shadowColor = color;
-
-        ctx.fillText(
-            messages[i],
-            centerX,
-            y
-        );
-
-        ctx.shadowBlur = 0;
-    }
-}
-
-
-// --------------------------------------------------
-// HEART OUTLINE
-// --------------------------------------------------
-
-function drawHeartOutline() {
-
-    ctx.beginPath();
-
-    for (let i = 0; i <= 360; i++) {
-
-        let t = i * Math.PI / 180;
-
-        let point = getHeartPoint(t);
-
-        let x = centerX + point.x;
-        let y = centerY + point.y;
-
-        if (i === 0) {
-            ctx.moveTo(x, y);
-        }
-        else {
-            ctx.lineTo(x, y);
-        }
-    }
-
-    ctx.stroke();
-}
-
-
-// --------------------------------------------------
-// SPARKLES
-// --------------------------------------------------
-
-function drawSparkles() {
-
-    sparkle++;
-
-    for (let i = 0; i < 20; i++) {
-
-        let angle =
-            (i * 18 + sparkle) * Math.PI / 180;
-
-        let radius = 320;
-
-        let x =
-            centerX +
-            Math.cos(angle) * radius;
-
-        let y =
-            centerY +
-            Math.sin(angle) * radius * 0.7;
-
-        let size =
-            2 + Math.sin(sparkle * 0.05 + i) * 2;
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            y,
-            size,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle =
-            colors[i % colors.length];
-
-        ctx.shadowBlur = 15;
-
-        ctx.shadowColor =
-            colors[i % colors.length];
-
-        ctx.fill();
-    }
-
-    ctx.shadowBlur = 0;
-}
-
-
-// --------------------------------------------------
-// START
-// --------------------------------------------------
-
-drawHeart();
-
-</script>
+    </script>
 
 </body>
 </html>
